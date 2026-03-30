@@ -2,102 +2,173 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AquaLift Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22AquaLift%22,%22short_name%22:%22AquaLift%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%230077B6%22}">
     <style>
-        .card-swim { border-top: 8px solid #0077B6; }
-        .card-upper { border-top: 8px solid #E63946; }
-        .card-legs { border-top: 8px solid #FFB703; }
-        body { background-color: #f3f4f6; }
+        .active-tab { border-top: 4px solid #0077B6; background: white; color: #0077B6; }
+        .hidden { display: none; }
+        body { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="p-4 pb-20">
+<body class="bg-gray-100 font-sans pb-24">
 
-    <header class="mb-8 mt-4 text-center">
-        <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">MON <span class="text-blue-600">SUIVI</span></h1>
-        <p class="text-gray-500">Mars - Avril 2026</p>
-    </header>
+    <main id="view-log" class="p-4 max-w-md mx-auto">
+        <header class="mb-6 mt-2">
+            <h1 class="text-2xl font-black text-gray-800 italic uppercase tracking-tighter">Nouvelle Séance</h1>
+        </header>
 
-    <div class="max-w-md mx-auto space-y-6">
+        <div class="space-y-4">
+            <section class="bg-white rounded-2xl shadow-sm overflow-hidden border-t-8 border-blue-500">
+                <div class="p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="waves" class="text-blue-500"></i>
+                        <select id="swim-type" class="font-bold text-lg bg-transparent focus:outline-none">
+                            <option>Brasse</option>
+                            <option>Crawl</option>
+                            <option>Dos crawlé</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-3 rounded-xl">
+                            <label class="block text-[10px] font-bold text-blue-600 uppercase">Longueurs (50m)</label>
+                            <input type="number" id="swim-laps" value="11" class="w-full bg-transparent text-xl font-black focus:outline-none">
+                        </div>
+                        <button onclick="saveSession('swim')" class="bg-blue-500 text-white font-bold rounded-xl active:scale-95 transition">Enregistrer</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl shadow-sm overflow-hidden border-t-8 border-red-500">
+                <div class="p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="dumbbell" class="text-red-500"></i>
+                        <select id="muscle-part" class="font-bold text-lg bg-transparent focus:outline-none uppercase italic">
+                            <option value="Upper">Upper Body</option>
+                            <option value="Legs">Legs</option>
+                        </select>
+                    </div>
+                    <input type="text" id="machine-name" placeholder="Nom de la machine (ex: Machine A)" class="w-full mb-3 p-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-red-300">
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <label class="text-[10px] font-bold text-gray-400">POIDS (KG)</label>
+                            <input type="number" id="weight" value="60" class="w-full bg-transparent text-lg font-black focus:outline-none">
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg">
+                            <label class="text-[10px] font-bold text-gray-400">REPS (ex: 12,12,8)</label>
+                            <input type="text" id="reps" placeholder="12,12,8" class="w-full bg-transparent text-lg font-black focus:outline-none">
+                        </div>
+                    </div>
+                    <button onclick="saveSession('muscle')" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl active:scale-95 transition shadow-lg shadow-red-200">Log Workout</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <main id="view-history" class="p-4 max-w-md mx-auto hidden">
+        <header class="mb-6 mt-2">
+            <h1 class="text-2xl font-black text-gray-800 italic uppercase tracking-tighter">Progression</h1>
+        </header>
         
-        <div class="bg-white rounded-2xl shadow-sm p-5 card-swim">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="waves" class="text-blue-600"></i>
-                    <h2 class="text-xl font-bold text-gray-800 uppercase italic">Swimming</h2>
-                </div>
-                <span class="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-1 rounded">Brasse</span>
-            </div>
-            <div class="grid grid-cols-2 gap-4 bg-blue-50 p-4 rounded-xl">
-                <div>
-                    <p class="text-xs text-blue-600 font-bold uppercase">Allers-Retours</p>
-                    <input type="number" value="11" class="bg-transparent text-2xl font-black w-full focus:outline-none">
-                </div>
-                <div class="text-right border-l border-blue-200 pl-4">
-                    <p class="text-xs text-blue-600 font-bold uppercase">Distance</p>
-                    <p class="text-2xl font-black">550 <span class="text-sm">m</span></p>
-                </div>
-            </div>
-        </div>
+        <canvas id="progressionChart" class="mb-6 bg-white p-2 rounded-xl shadow-sm"></canvas>
 
-        <div class="bg-white rounded-2xl shadow-sm p-5 card-upper">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="dumbbell" class="text-red-500"></i>
-                    <h2 class="text-xl font-bold text-gray-800 uppercase italic">Upper Body</h2>
-                </div>
-                <span class="text-xs font-semibold bg-red-100 text-red-700 px-2 py-1 rounded">Machine A</span>
+        <h2 class="font-bold text-gray-500 uppercase text-xs mb-3">Historique des séances</h2>
+        <div id="history-list" class="space-y-2">
             </div>
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex gap-2 text-center">
-                    <div class="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center font-bold">12</div>
-                    <div class="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-gray-400">12</div>
-                    <div class="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center font-bold text-gray-400">8</div>
-                </div>
-                <div class="text-right">
-                    <p class="text-2xl font-black text-red-600">60 <span class="text-sm">kg</span></p>
-                </div>
-            </div>
-            <button class="w-full py-3 bg-red-500 text-white rounded-xl font-bold shadow-lg shadow-red-200 active:scale-95 transition-transform">
-                Log New Session
-            </button>
-        </div>
+        <button onclick="clearAllData()" class="mt-8 text-xs text-red-400 w-full text-center underline">Effacer toutes les données</button>
+    </main>
 
-        <div class="bg-white rounded-2xl shadow-sm p-5 card-legs">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="zap" class="text-yellow-500"></i>
-                    <h2 class="text-xl font-bold text-gray-800 uppercase italic">Legs</h2>
-                </div>
-                <span class="text-xs font-semibold bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Machine A</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2 mb-4">
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p class="text-[10px] uppercase font-bold text-gray-400">Dernier Poids</p>
-                    <p class="text-lg font-bold italic">60.0 kg</p>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                    <p class="text-[10px] uppercase font-bold text-gray-400">Objectif Next</p>
-                    <p class="text-lg font-bold italic text-yellow-600">62.5 kg</p>
-                </div>
-            </div>
-            <button class="w-full py-3 bg-yellow-500 text-white rounded-xl font-bold shadow-lg shadow-yellow-100 active:scale-95 transition-transform">
-                Start Training
-            </button>
-        </div>
-
-    </div>
-
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-around items-center">
-        <button class="text-blue-600 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-[10px]">Historique</span></button>
-        <button class="bg-black text-white p-3 rounded-full -mt-10 shadow-xl"><i data-lucide="plus"></i></button>
-        <button class="text-gray-400 flex flex-col items-center"><i data-lucide="trending-up"></i><span class="text-[10px]">Stats</span></button>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-stretch h-16 shadow-2xl">
+        <button onclick="showTab('log')" id="btn-log" class="flex-1 flex flex-col items-center justify-center active-tab">
+            <i data-lucide="plus-circle"></i><span class="text-[10px] font-bold">LOG</span>
+        </button>
+        <button onclick="showTab('history')" id="btn-history" class="flex-1 flex flex-col items-center justify-center text-gray-400">
+            <i data-lucide="line-chart"></i><span class="text-[10px] font-bold">STATS</span>
+        </button>
     </nav>
 
     <script>
         lucide.createIcons();
+        let sessions = JSON.parse(localStorage.getItem('workoutSessions')) || [];
+
+        function showTab(tab) {
+            document.getElementById('view-log').classList.toggle('hidden', tab !== 'log');
+            document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
+            document.getElementById('btn-log').className = tab === 'log' ? 'flex-1 flex flex-col items-center justify-center active-tab' : 'flex-1 flex flex-col items-center justify-center text-gray-400';
+            document.getElementById('btn-history').className = tab === 'history' ? 'flex-1 flex flex-col items-center justify-center active-tab' : 'flex-1 flex flex-col items-center justify-center text-gray-400';
+            if(tab === 'history') { renderHistory(); renderChart(); }
+        }
+
+        function saveSession(type) {
+            const date = new Date().toLocaleDateString('fr-FR');
+            let data = { date, type };
+
+            if(type === 'swim') {
+                data.label = document.getElementById('swim-type').value;
+                data.value = document.getElementById('swim-laps').value * 50;
+                data.unit = 'm';
+            } else {
+                data.label = document.getElementById('muscle-part').value + " - " + document.getElementById('machine-name').value;
+                data.value = document.getElementById('weight').value;
+                data.reps = document.getElementById('reps').value;
+                data.unit = 'kg';
+            }
+
+            sessions.push(data);
+            localStorage.setItem('workoutSessions', JSON.stringify(sessions));
+            alert("Séance enregistrée !");
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = sessions.slice().reverse().map(s => `
+                <div class="bg-white p-3 rounded-xl shadow-sm flex justify-between items-center border-l-4 ${s.type === 'swim' ? 'border-blue-400' : 'border-red-400'}">
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">${s.date}</p>
+                        <p class="font-bold text-gray-800">${s.label}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-black text-lg">${s.value} <span class="text-xs text-gray-500">${s.unit}</span></p>
+                        ${s.reps ? `<p class="text-[10px] font-bold text-gray-400 italic">${s.reps}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('progressionChart').getContext('2d');
+            if (window.myChart) window.myChart.destroy();
+            
+            const muscleData = sessions.filter(s => s.type === 'muscle');
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: muscleData.map(s => s.date),
+                    datasets: [{
+                        label: 'Poids (kg)',
+                        data: muscleData.map(s => s.value),
+                        borderColor: '#E63946',
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(230, 57, 70, 0.1)'
+                    }]
+                },
+                options: { plugins: { legend: { display: false } } }
+            });
+        }
+
+        function clearAllData() {
+            if(confirm("Tout effacer ?")) {
+                localStorage.clear();
+                sessions = [];
+                renderHistory();
+                location.reload();
+            }
+        }
     </script>
 </body>
 </html>
