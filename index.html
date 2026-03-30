@@ -3,172 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AquaLift Pro</title>
+    <title>Musclor Mommy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22AquaLift%22,%22short_name%22:%22AquaLift%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%230077B6%22}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        .active-tab { border-top: 4px solid #0077B6; background: white; color: #0077B6; }
-        .hidden { display: none; }
-        body { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Outfit', sans-serif; background: #0f172a; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #ff7eb3, #ff758c, #ff7eb3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tab-active { color: #ff7eb3; border-bottom: 2px solid #ff7eb3; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans pb-24">
+<body class="pb-24">
 
-    <main id="view-log" class="p-4 max-w-md mx-auto">
-        <header class="mb-6 mt-2">
-            <h1 class="text-2xl font-black text-gray-800 italic uppercase tracking-tighter">Nouvelle Séance</h1>
-        </header>
+    <header class="p-6 pt-8">
+        <h1 class="text-3xl font-black italic tracking-tighter uppercase gradient-text">Musclor Mommy</h1>
+        <p class="text-gray-400 text-sm">Prête à tout casser aujourd'hui ? 💪</p>
+    </header>
 
-        <div class="space-y-4">
-            <section class="bg-white rounded-2xl shadow-sm overflow-hidden border-t-8 border-blue-500">
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-3">
-                        <i data-lucide="waves" class="text-blue-500"></i>
-                        <select id="swim-type" class="font-bold text-lg bg-transparent focus:outline-none">
-                            <option>Brasse</option>
-                            <option>Crawl</option>
-                            <option>Dos crawlé</option>
-                        </select>
+    <div class="flex px-6 mb-6 gap-6 text-sm font-bold uppercase tracking-widest border-b border-white/10">
+        <button onclick="showTab('log')" id="tab-log" class="pb-2 tab-active">Log</button>
+        <button onclick="showTab('history')" id="tab-history" class="pb-2 text-gray-500">History</button>
+        <button onclick="showTab('stats')" id="tab-stats" class="pb-2 text-gray-500">Progression</button>
+    </div>
+
+    <main id="view-log" class="px-4 space-y-4">
+        <div class="glass rounded-3xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-lg font-bold italic">NOUVELLE ENTRÉE</h2>
+                <input type="date" id="input-date" class="bg-white/10 text-xs p-2 rounded-lg outline-none border border-white/20">
+            </div>
+
+            <div class="flex gap-2 mb-6">
+                <button onclick="setType('swim')" id="btn-swim" class="flex-1 p-3 rounded-xl glass border-blue-500/50 text-blue-400 flex flex-col items-center gap-1"><i data-lucide="waves"></i><span class="text-[10px] font-bold">SWIM</span></button>
+                <button onclick="setType('upper')" id="btn-upper" class="flex-1 p-3 rounded-xl glass border-red-500/50 text-red-400 flex flex-col items-center gap-1"><i data-lucide="dumbbell"></i><span class="text-[10px] font-bold">UPPER</span></button>
+                <button onclick="setType('legs')" id="btn-legs" class="flex-1 p-3 rounded-xl glass border-yellow-500/50 text-yellow-400 flex flex-col items-center gap-1"><i data-lucide="zap"></i><span class="text-[10px] font-bold">LEGS</span></button>
+            </div>
+
+            <div id="dynamic-inputs" class="space-y-4">
+                <input type="text" id="exercise-name" placeholder="Nom de l'exo / Nage" class="w-full bg-white/5 p-4 rounded-2xl border border-white/10 outline-none focus:border-pink-500">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                        <label id="label-v1" class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">POIDS (KG)</label>
+                        <input type="number" id="val1" class="bg-transparent text-2xl font-bold w-full outline-none">
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-blue-50 p-3 rounded-xl">
-                            <label class="block text-[10px] font-bold text-blue-600 uppercase">Longueurs (50m)</label>
-                            <input type="number" id="swim-laps" value="11" class="w-full bg-transparent text-xl font-black focus:outline-none">
-                        </div>
-                        <button onclick="saveSession('swim')" class="bg-blue-500 text-white font-bold rounded-xl active:scale-95 transition">Enregistrer</button>
+                    <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                        <label id="label-v2" class="text-[10px] font-bold text-gray-400 block mb-1 uppercase">REPS / DIST</label>
+                        <input type="text" id="val2" class="bg-transparent text-2xl font-bold w-full outline-none">
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section class="bg-white rounded-2xl shadow-sm overflow-hidden border-t-8 border-red-500">
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-3">
-                        <i data-lucide="dumbbell" class="text-red-500"></i>
-                        <select id="muscle-part" class="font-bold text-lg bg-transparent focus:outline-none uppercase italic">
-                            <option value="Upper">Upper Body</option>
-                            <option value="Legs">Legs</option>
-                        </select>
-                    </div>
-                    <input type="text" id="machine-name" placeholder="Nom de la machine (ex: Machine A)" class="w-full mb-3 p-2 bg-gray-50 rounded-lg text-sm border-none focus:ring-1 focus:ring-red-300">
-                    
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div class="bg-gray-50 p-2 rounded-lg">
-                            <label class="text-[10px] font-bold text-gray-400">POIDS (KG)</label>
-                            <input type="number" id="weight" value="60" class="w-full bg-transparent text-lg font-black focus:outline-none">
-                        </div>
-                        <div class="bg-gray-50 p-2 rounded-lg">
-                            <label class="text-[10px] font-bold text-gray-400">REPS (ex: 12,12,8)</label>
-                            <input type="text" id="reps" placeholder="12,12,8" class="w-full bg-transparent text-lg font-black focus:outline-none">
-                        </div>
-                    </div>
-                    <button onclick="saveSession('muscle')" class="w-full py-3 bg-red-500 text-white font-bold rounded-xl active:scale-95 transition shadow-lg shadow-red-200">Log Workout</button>
-                </div>
-            </section>
+            <button onclick="addEntry()" class="w-full mt-6 py-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl font-black shadow-lg shadow-pink-500/20 active:scale-95 transition">ENREGISTRER</button>
         </div>
     </main>
 
-    <main id="view-history" class="p-4 max-w-md mx-auto hidden">
-        <header class="mb-6 mt-2">
-            <h1 class="text-2xl font-black text-gray-800 italic uppercase tracking-tighter">Progression</h1>
-        </header>
-        
-        <canvas id="progressionChart" class="mb-6 bg-white p-2 rounded-xl shadow-sm"></canvas>
-
-        <h2 class="font-bold text-gray-500 uppercase text-xs mb-3">Historique des séances</h2>
-        <div id="history-list" class="space-y-2">
+    <main id="view-history" class="px-4 hidden space-y-4">
+        <div id="history-container" class="space-y-3">
             </div>
-        <button onclick="clearAllData()" class="mt-8 text-xs text-red-400 w-full text-center underline">Effacer toutes les données</button>
     </main>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-stretch h-16 shadow-2xl">
-        <button onclick="showTab('log')" id="btn-log" class="flex-1 flex flex-col items-center justify-center active-tab">
-            <i data-lucide="plus-circle"></i><span class="text-[10px] font-bold">LOG</span>
-        </button>
-        <button onclick="showTab('history')" id="btn-history" class="flex-1 flex flex-col items-center justify-center text-gray-400">
-            <i data-lucide="line-chart"></i><span class="text-[10px] font-bold">STATS</span>
-        </button>
-    </nav>
+    <main id="view-stats" class="px-4 hidden space-y-6">
+        <div class="glass p-4 rounded-3xl">
+            <select id="filter-exercise" onchange="updateChart()" class="w-full bg-transparent p-2 font-bold outline-none mb-4 border-b border-white/10">
+                </select>
+            <canvas id="progChart" class="w-full"></canvas>
+        </div>
+    </main>
 
     <script>
-        lucide.createIcons();
-        let sessions = JSON.parse(localStorage.getItem('workoutSessions')) || [];
+        let currentType = 'upper';
+        let entries = JSON.parse(localStorage.getItem('mm_data')) || [];
+        
+        // Init date
+        document.getElementById('input-date').valueAsDate = new Date();
 
-        function showTab(tab) {
-            document.getElementById('view-log').classList.toggle('hidden', tab !== 'log');
-            document.getElementById('view-history').classList.toggle('hidden', tab !== 'history');
-            document.getElementById('btn-log').className = tab === 'log' ? 'flex-1 flex flex-col items-center justify-center active-tab' : 'flex-1 flex flex-col items-center justify-center text-gray-400';
-            document.getElementById('btn-history').className = tab === 'history' ? 'flex-1 flex flex-col items-center justify-center active-tab' : 'flex-1 flex flex-col items-center justify-center text-gray-400';
-            if(tab === 'history') { renderHistory(); renderChart(); }
+        function setType(type) {
+            currentType = type;
+            const colors = { swim: 'blue', upper: 'red', legs: 'yellow' };
+            ['swim', 'upper', 'legs'].forEach(t => {
+                document.getElementById('btn-'+t).style.background = t === type ? `rgba(255,255,255,0.1)` : '';
+                document.getElementById('btn-'+t).style.borderColor = t === type ? '' : 'rgba(255,255,255,0.1)';
+            });
+            document.getElementById('label-v1').innerText = type === 'swim' ? 'LONGUEURS' : 'POIDS (KG)';
+            document.getElementById('label-v2').innerText = type === 'swim' ? 'DISTANCE (M)' : 'REPS (EX: 12,12,8)';
         }
 
-        function saveSession(type) {
-            const date = new Date().toLocaleDateString('fr-FR');
-            let data = { date, type };
+        function addEntry() {
+            const entry = {
+                id: Date.now(),
+                date: document.getElementById('input-date').value,
+                type: currentType,
+                name: document.getElementById('exercise-name').value || "Inconnu",
+                v1: document.getElementById('val1').value,
+                v2: document.getElementById('val2').value
+            };
+            entries.push(entry);
+            localStorage.setItem('mm_data', JSON.stringify(entries));
+            alert("Validé Mommy ! ✨");
+            renderHistory();
+        }
 
-            if(type === 'swim') {
-                data.label = document.getElementById('swim-type').value;
-                data.value = document.getElementById('swim-laps').value * 50;
-                data.unit = 'm';
-            } else {
-                data.label = document.getElementById('muscle-part').value + " - " + document.getElementById('machine-name').value;
-                data.value = document.getElementById('weight').value;
-                data.reps = document.getElementById('reps').value;
-                data.unit = 'kg';
+        function deleteEntry(id) {
+            if(confirm("On supprime ?")) {
+                entries = entries.filter(e => e.id !== id);
+                localStorage.setItem('mm_data', JSON.stringify(entries));
+                renderHistory();
+                updateStatsList();
             }
-
-            sessions.push(data);
-            localStorage.setItem('workoutSessions', JSON.stringify(sessions));
-            alert("Séance enregistrée !");
         }
 
         function renderHistory() {
-            const list = document.getElementById('history-list');
-            list.innerHTML = sessions.slice().reverse().map(s => `
-                <div class="bg-white p-3 rounded-xl shadow-sm flex justify-between items-center border-l-4 ${s.type === 'swim' ? 'border-blue-400' : 'border-red-400'}">
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase">${s.date}</p>
-                        <p class="font-bold text-gray-800">${s.label}</p>
+            const container = document.getElementById('history-container');
+            container.innerHTML = entries.slice().sort((a,b) => new Date(b.date) - new Date(a.date)).map(e => `
+                <div class="glass p-4 rounded-2xl flex justify-between items-center relative group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-2 h-10 rounded-full ${e.type==='swim'?'bg-blue-500':e.type==='upper'?'bg-red-500':'bg-yellow-500'}"></div>
+                        <div>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase">${new Date(e.date).toLocaleDateString('fr-FR')}</p>
+                            <p class="font-bold uppercase tracking-tight">${e.name}</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <p class="font-black text-lg">${s.value} <span class="text-xs text-gray-500">${s.unit}</span></p>
-                        ${s.reps ? `<p class="text-[10px] font-bold text-gray-400 italic">${s.reps}</p>` : ''}
+                    <div class="flex items-center gap-4">
+                        <div class="text-right">
+                            <p class="text-xl font-black">${e.v1}<span class="text-[10px] text-gray-400 ml-1">${e.type==='swim'?'L':'KG'}</span></p>
+                            <p class="text-[10px] font-medium text-pink-400 italic">${e.v2}</p>
+                        </div>
+                        <button onclick="deleteEntry(${e.id})" class="text-gray-600 hover:text-red-500 transition"><i data-lucide="trash-2" size="18"></i></button>
                     </div>
                 </div>
             `).join('');
+            lucide.createIcons();
         }
 
-        function renderChart() {
-            const ctx = document.getElementById('progressionChart').getContext('2d');
-            if (window.myChart) window.myChart.destroy();
-            
-            const muscleData = sessions.filter(s => s.type === 'muscle');
-            window.myChart = new Chart(ctx, {
+        function showTab(tab) {
+            ['log', 'history', 'stats'].forEach(t => {
+                document.getElementById('view-'+t).classList.add('hidden');
+                document.getElementById('tab-'+t).className = 'pb-2 text-gray-500';
+            });
+            document.getElementById('view-'+tab).classList.remove('hidden');
+            document.getElementById('tab-'+tab).className = 'pb-2 tab-active';
+            if(tab === 'stats') updateStatsList();
+            if(tab === 'history') renderHistory();
+        }
+
+        function updateStatsList() {
+            const select = document.getElementById('filter-exercise');
+            const uniqueNames = [...new Set(entries.map(e => e.name))];
+            select.innerHTML = uniqueNames.map(n => `<option value="${n}">${n}</option>`).join('');
+            updateChart();
+        }
+
+        let myChart;
+        function updateChart() {
+            const name = document.getElementById('filter-exercise').value;
+            const data = entries.filter(e => e.name === name).sort((a,b) => new Date(a.date) - new Date(b.date));
+            const ctx = document.getElementById('progChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: muscleData.map(s => s.date),
+                    labels: data.map(d => d.date),
                     datasets: [{
-                        label: 'Poids (kg)',
-                        data: muscleData.map(s => s.value),
-                        borderColor: '#E63946',
-                        tension: 0.3,
+                        label: 'Progression',
+                        data: data.map(d => d.v1),
+                        borderColor: '#ff7eb3',
+                        backgroundColor: 'rgba(255, 126, 179, 0.2)',
                         fill: true,
-                        backgroundColor: 'rgba(230, 57, 70, 0.1)'
+                        tension: 0.4
                     }]
                 },
-                options: { plugins: { legend: { display: false } } }
+                options: { scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { display: false } } }
             });
         }
 
-        function clearAllData() {
-            if(confirm("Tout effacer ?")) {
-                localStorage.clear();
-                sessions = [];
-                renderHistory();
-                location.reload();
-            }
-        }
+        lucide.createIcons();
+        setType('upper');
     </script>
 </body>
 </html>
