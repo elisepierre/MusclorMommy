@@ -12,60 +12,63 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; height: 100vh; overflow: hidden; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px; }
         .text-gradient { background: linear-gradient(135deg, #ff0080 0%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; outline: none; text-align: center; }
+        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; outline: none; text-align: center; color: white; }
         input:focus { border-color: #ff0080; }
         .tab-btn { opacity: 0.2; transition: 0.3s; }
         .tab-btn.active { opacity: 1; transform: scale(1.1); }
-        .view-container { height: calc(100vh - 200px); overflow-y: auto; scrollbar-width: none; }
+        .view-container { height: calc(100vh - 200px); overflow-y: auto; scrollbar-width: none; padding-bottom: 40px; }
         .view-container::-webkit-scrollbar { display: none; }
-        .badge { background: rgba(255, 255, 255, 0.07); padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .badge-swim { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .badge-upper { background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.2); }
+        .badge-legs { background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2); }
+        .badge-common { padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body class="p-5">
 
     <header class="flex flex-col items-center mb-6">
-        <h1 class="text-2xl font-black italic text-gradient uppercase tracking-tighter text-center w-full">Musclor Mommy</h1>
+        <h1 class="text-xl font-black italic text-gradient uppercase tracking-tighter text-center">Musclor Mommy</h1>
         <input type="date" id="input-date" class="mt-2 bg-transparent border-none text-[11px] font-bold text-gray-500 uppercase">
     </header>
 
     <div class="flex justify-center gap-10 mb-8">
-        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"><i data-lucide="waves" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2">Pool</span></button>
-        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-red-500/10 text-red-400 border border-red-500/20"><i data-lucide="dumbbell" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2">Upper</span></button>
-        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"><i data-lucide="zap" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2">Legs</span></button>
+        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20"><i data-lucide="waves" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2 text-blue-400">Pool</span></button>
+        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-red-500/10 text-red-400 border border-red-500/20"><i data-lucide="dumbbell" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2 text-pink-500">Upper</span></button>
+        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"><i data-lucide="zap" size="24"></i></div><span class="text-[9px] font-black uppercase mt-2 text-yellow-500">Legs</span></button>
     </div>
 
     <div class="view-container">
         <div id="view-log" class="hidden animate-in fade-in zoom-in duration-300">
             <div class="glass p-6 space-y-6">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest block text-center">Nom de l'exercice</label>
+                <div class="space-y-2 text-center">
+                    <label id="label-name-main" class="text-[10px] font-black uppercase tracking-widest block opacity-50">Exercice</label>
                     <input type="text" id="exercise-name" list="suggestions" placeholder="..." class="w-full py-4 text-xl font-black uppercase tracking-tight">
                     <datalist id="suggestions"></datalist>
                 </div>
 
-                <div id="pool-fields" class="hidden">
-                    <label class="text-[10px] font-black text-blue-500 uppercase block text-center mb-2">Longueurs (25m)</label>
+                <div id="pool-fields" class="hidden text-center">
+                    <label class="text-[10px] font-black text-blue-500 uppercase block mb-2">Longueurs (25m)</label>
                     <input type="number" id="swim-laps" oninput="calcDist()" placeholder="0" class="w-full py-6 text-5xl font-black text-blue-400">
-                    <p class="text-center mt-2 text-sm font-bold text-gray-400">Total: <span id="swim-total" class="text-white">0</span>m</p>
+                    <p class="mt-2 text-sm font-bold text-gray-400">Total: <span id="swim-total" class="text-blue-400">0</span>m</p>
                 </div>
 
                 <div id="muscle-fields" class="space-y-6">
                     <div class="flex gap-4">
                         <div class="flex-1 space-y-2 text-center">
-                            <label class="text-[10px] font-black text-red-500 uppercase">Poids</label>
+                            <label id="label-weight" class="text-[10px] font-black uppercase">Poids</label>
                             <div class="relative">
                                 <input type="number" id="weight" placeholder="0" class="w-full py-4 text-3xl font-black">
-                                <button onclick="toggleUnit()" id="unit-btn" class="absolute right-2 top-1 text-[8px] font-black text-gray-600 bg-white/5 px-2 py-1 rounded-md">KG</button>
+                                <button onclick="toggleUnit()" id="unit-btn" class="absolute right-2 top-1 text-[8px] font-black text-gray-500 bg-white/5 px-2 py-1 rounded-md">KG</button>
                             </div>
                         </div>
                         <div class="w-1/3 space-y-2 text-center">
-                            <label class="text-[10px] font-black text-pink-500 uppercase tracking-tighter">Reps</label>
+                            <label id="label-reps" class="text-[10px] font-black uppercase">Reps</label>
                             <input type="number" id="reps" placeholder="0" class="w-full py-4 text-3xl font-black italic">
                         </div>
                     </div>
                 </div>
-                <button onclick="addEntry()" class="w-full py-5 bg-gradient-to-r from-pink-500 to-rose-500 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-pink-500/20 active:scale-95 transition-all">Enregistrer Séance</button>
+                <button onclick="addEntry()" id="btn-submit-log" class="w-full py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl active:scale-95 transition-all">Enregistrer Séance</button>
             </div>
         </div>
 
@@ -73,15 +76,15 @@
         <div id="view-stats" class="hidden space-y-6"></div>
     </div>
 
-    <nav class="fixed bottom-6 left-6 right-6 h-18 glass flex justify-around items-center border border-white/10 shadow-2xl">
-        <button onclick="changeTab('log')"><i data-lucide="plus-circle" id="nav-log" class="text-gray-500"></i></button>
-        <button onclick="changeTab('history')"><i data-lucide="list" id="nav-history" class="text-gray-500"></i></button>
-        <button onclick="changeTab('stats')"><i data-lucide="activity" id="nav-stats" class="text-gray-500"></i></button>
+    <nav class="fixed bottom-6 left-6 right-6 h-18 glass flex border border-white/10 shadow-2xl overflow-hidden">
+        <button onclick="changeTab('log')" class="flex-1 flex items-center justify-center h-full"><i data-lucide="plus-circle" id="nav-log" class="text-gray-500"></i></button>
+        <button onclick="changeTab('history')" class="flex-1 flex items-center justify-center h-full"><i data-lucide="list" id="nav-history" class="text-gray-500"></i></button>
+        <button onclick="changeTab('stats')" class="flex-1 flex items-center justify-center h-full"><i data-lucide="activity" id="nav-stats" class="text-gray-500"></i></button>
     </nav>
 
     <script>
         let currentType = null; 
-        let entries = JSON.parse(localStorage.getItem('mm_v11_data')) || [];
+        let entries = JSON.parse(localStorage.getItem('mm_v12_data')) || [];
         let currentTab = 'log';
         let isLb = false;
         document.getElementById('input-date').valueAsDate = new Date();
@@ -92,15 +95,35 @@
             currentType = (currentType === type) ? null : type;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
+            const submitBtn = document.getElementById('btn-submit-log');
+            const labelWeight = document.getElementById('label-weight');
+            const labelReps = document.getElementById('label-reps');
+            const labelName = document.getElementById('label-name-main');
+
             if(currentType) {
                 document.getElementById('btn-'+currentType).classList.add('active');
                 document.getElementById('view-log').classList.remove('hidden');
                 document.getElementById('pool-fields').classList.toggle('hidden', currentType !== 'swim');
                 document.getElementById('muscle-fields').classList.toggle('hidden', currentType === 'swim');
+                
+                // Color updates
+                if(currentType === 'swim') {
+                    submitBtn.className = "w-full py-5 bg-blue-600 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-blue-500/20 active:scale-95 transition-all text-white";
+                    labelName.className = "text-[10px] font-black text-blue-500 uppercase tracking-widest block text-center";
+                } else if(currentType === 'upper') {
+                    submitBtn.className = "w-full py-5 bg-pink-600 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-pink-500/20 active:scale-95 transition-all text-white";
+                    labelWeight.className = "text-[10px] font-black text-pink-500 uppercase";
+                    labelReps.className = "text-[10px] font-black text-pink-500 uppercase";
+                    labelName.className = "text-[10px] font-black text-pink-500 uppercase tracking-widest block text-center";
+                } else {
+                    submitBtn.className = "w-full py-5 bg-yellow-600 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-yellow-500/20 active:scale-95 transition-all text-white";
+                    labelWeight.className = "text-[10px] font-black text-yellow-500 uppercase";
+                    labelReps.className = "text-[10px] font-black text-yellow-500 uppercase";
+                    labelName.className = "text-[10px] font-black text-yellow-500 uppercase tracking-widest block text-center";
+                }
             } else {
                 document.getElementById('view-log').classList.add('hidden');
             }
-            
             refreshCurrentView();
             updateSuggestions();
         }
@@ -108,12 +131,8 @@
         function changeTab(tab) {
             currentTab = tab;
             ['log', 'history', 'stats'].forEach(t => document.getElementById('view-'+t).classList.add('hidden'));
-            
-            if (tab === 'log' && currentType) {
-                document.getElementById('view-log').classList.remove('hidden');
-            } else if (tab !== 'log') {
-                document.getElementById('view-'+tab).classList.remove('hidden');
-            }
+            if (tab === 'log' && currentType) document.getElementById('view-log').classList.remove('hidden');
+            else if (tab !== 'log') document.getElementById('view-'+tab).classList.remove('hidden');
 
             document.querySelectorAll('nav i').forEach(i => i.classList.remove('text-pink-500'));
             document.getElementById('nav-'+tab).classList.add('text-pink-500');
@@ -122,8 +141,7 @@
 
         function addEntry() {
             const name = document.getElementById('exercise-name').value.trim().toUpperCase();
-            if(!name || !currentType) return alert("Sélectionne une catégorie en haut !");
-            
+            if(!name || !currentType) return;
             let weight = parseFloat(document.getElementById('weight').value) || 0;
             if(isLb) weight = parseFloat((weight * 0.453).toFixed(1));
             const reps = parseInt(document.getElementById('reps').value) || 0;
@@ -131,7 +149,6 @@
             const date = document.getElementById('input-date').value;
 
             let existing = entries.find(e => e.date === date && e.name === name && e.type === currentType);
-            
             if(existing) {
                 if(currentType === 'swim') {
                     existing.v1 = (parseInt(existing.v1) || 0) + laps;
@@ -146,15 +163,13 @@
                     id: Date.now(), date, type: currentType, name, 
                     v1: currentType === 'swim' ? laps : weight,
                     v2: currentType === 'swim' ? laps * 25 : reps,
-                    allWeights: [weight],
-                    allReps: [reps],
+                    allWeights: [weight], allReps: [reps],
                     bestWeight: (currentType !== 'swim' && reps >= 8) ? weight : 0
                 });
             }
-            localStorage.setItem('mm_v11_data', JSON.stringify(entries));
-            alert("✨ Ajouté !");
+            localStorage.setItem('mm_v12_data', JSON.stringify(entries));
+            alert("Check! 💪");
             document.getElementById('reps').value = ""; document.getElementById('weight').value = "";
-            updateSuggestions();
             if(currentTab === 'history') renderHistory();
         }
 
@@ -162,20 +177,19 @@
             const container = document.getElementById('view-history');
             const filtered = currentType ? entries.filter(e => e.type === currentType) : entries;
             container.innerHTML = filtered.slice().reverse().map(e => `
-                <div class="glass p-5 flex justify-between items-center border-l-4 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-red-500':'border-yellow-500'}">
+                <div class="glass p-5 flex justify-between items-center border-l-4 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-pink-500':'border-yellow-500'}">
                     <div class="flex-1">
                         <p class="text-[8px] text-gray-500 font-black uppercase mb-1">${e.date}</p>
-                        <p class="font-bold uppercase text-xs tracking-tighter">${e.name}</p>
+                        <p class="font-bold uppercase text-xs ${e.type==='swim'?'text-blue-400':e.type==='upper'?'text-pink-400':'text-yellow-400'}">${e.name}</p>
                     </div>
                     <div class="text-right space-y-2">
                         <div class="flex justify-end gap-1 flex-wrap max-w-[120px]">
-                            ${e.type === 'swim' ? `<span class="badge text-blue-400">${e.v1} L</span>` : e.allWeights.map(w => `<span class="badge">${w}k</span>`).join('')}
+                            ${e.type === 'swim' ? `<span class="badge-common badge-swim">${e.v1} L</span>` : e.allWeights.map(w => `<span class="badge-common ${e.type==='upper'?'badge-upper':'badge-legs'}">${w}k</span>`).join('')}
                         </div>
                         <div class="flex justify-end gap-1 flex-wrap max-w-[120px]">
-                            ${e.type === 'swim' ? `<span class="badge text-gray-400">${e.v2}m</span>` : e.allReps.map(r => `<span class="badge text-pink-500">${r}</span>`).join('')}
+                            ${e.type === 'swim' ? `<span class="badge-common badge-swim">${e.v2}m</span>` : e.allReps.map(r => `<span class="badge-common opacity-80 text-white border-white/10 bg-white/5">${r}</span>`).join('')}
                         </div>
                     </div>
-                    <button onclick="deleteEntry(${e.id})" class="ml-4 text-gray-800"><i data-lucide="trash-2" size="14"></i></button>
                 </div>
             `).join('');
             lucide.createIcons();
@@ -189,9 +203,10 @@
 
             machines.forEach(m => {
                 const data = filtered.filter(e => e.name === m).sort((a,b) => new Date(a.date) - new Date(b.date));
+                const color = data[0].type === 'swim' ? '#3b82f6' : data[0].type === 'upper' ? '#ec4899' : '#eab308';
                 const card = document.createElement('div');
                 card.className = "glass p-4";
-                card.innerHTML = `<p class="text-[9px] font-black text-pink-500 uppercase mb-4 tracking-widest text-center">${m}</p><canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>`;
+                card.innerHTML = `<p class="text-[9px] font-black uppercase mb-4 tracking-widest text-center" style="color:${color}">${m}</p><canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>`;
                 container.appendChild(card);
 
                 new Chart(document.getElementById(`chart-${m.replace(/\s+/g, '-')}`), {
@@ -200,34 +215,24 @@
                         labels: data.map(d => d.date),
                         datasets: [{
                             data: data.map(d => d.type === 'swim' ? d.v2 : d.bestWeight),
-                            borderColor: data[0].type === 'swim' ? '#3b82f6' : '#ff0080',
-                            fill: true, tension: 0.4, pointRadius: 4, backgroundColor: 'rgba(255, 0, 128, 0.05)'
+                            borderColor: color, fill: true, tension: 0.4, pointRadius: 4, 
+                            backgroundColor: color + '1A'
                         }]
                     },
-                    options: { plugins: { legend: { display: false } }, scales: { y: { display: true, ticks: { font: { size: 8 } } }, x: { display: false } } }
+                    options: { plugins: { legend: { display: false } }, scales: { y: { display: true, ticks: { color: color, font: { size: 8 } } }, x: { display: false } } }
                 });
             });
-        }
-
-        function deleteEntry(id) {
-            if(confirm("Supprimer la séance ?")) {
-                entries = entries.filter(e => e.id !== id);
-                localStorage.setItem('mm_v11_data', JSON.stringify(entries));
-                refreshCurrentView();
-            }
-        }
-
-        function updateSuggestions() {
-            const list = document.getElementById('suggestions');
-            const unique = [...new Set(entries.filter(e => !currentType || e.type === currentType).map(e => e.name))];
-            list.innerHTML = unique.map(name => `<option value="${name}">`).join('');
         }
 
         function refreshCurrentView() {
             if(currentTab === 'history') renderHistory();
             if(currentTab === 'stats') renderProgression();
         }
-        
+        function updateSuggestions() {
+            const list = document.getElementById('suggestions');
+            const unique = [...new Set(entries.filter(e => !currentType || e.type === currentType).map(e => e.name))];
+            list.innerHTML = unique.map(name => `<option value="${name}">`).join('');
+        }
         function calcDist() { document.getElementById('swim-total').innerText = (document.getElementById('swim-laps').value || 0) * 25; }
 
         lucide.createIcons();
