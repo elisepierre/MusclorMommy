@@ -15,67 +15,73 @@
         input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; outline: none; text-align: center; color: white; }
         .tab-btn { opacity: 0.2; transition: 0.3s; }
         .tab-btn.active { opacity: 1; transform: scale(1.1); }
-        .view-container { height: calc(100vh - 200px); overflow-y: auto; scrollbar-width: none; padding-bottom: 60px; }
+        .view-container { height: calc(100vh - 220px); overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         .view-container::-webkit-scrollbar { display: none; }
-        .badge-common { padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 800; }
-        .hidden { display: none !important; }
         
-        /* Floating Buttons Navigation */
-        .nav-btn { width: 56px; height: 56px; border-radius: 50%; display: flex; items-center; justify-center; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .nav-btn.active { background: #ff0080; color: white; transform: translateY(-10px); box-shadow: 0 15px 30px rgba(255, 0, 128, 0.3); }
+        /* Floating Buttons - FIXED CENTERING */
+        .nav-btn { 
+            width: 60px; height: 60px; border-radius: 50%; 
+            display: flex; items-center; justify-center; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+            color: #666;
+        }
+        .nav-btn i { display: block; margin: auto; } /* Force centering */
+        .nav-btn.active { background: #ff0080; color: white; transform: translateY(-12px); box-shadow: 0 15px 30px rgba(255, 0, 128, 0.4); border: none; }
 
-        /* Media Modal */
-        #media-modal { background: rgba(0,0,0,0.95); z-index: 1000; }
+        .hidden { display: none !important; }
+        #media-modal { background: rgba(0,0,0,0.98); z-index: 1000; transition: 0.3s; }
     </style>
 </head>
 <body class="p-5">
 
-    <div id="media-modal" class="fixed inset-0 hidden flex flex-col items-center justify-center p-6">
-        <button onclick="closeMedia()" class="absolute top-10 right-6 text-white"><i data-lucide="x-circle" size="36"></i></button>
-        <div id="media-content" class="glass w-full max-w-sm aspect-square flex items-center justify-center overflow-hidden">
+    <div id="media-modal" class="fixed inset-0 hidden flex flex-col items-center justify-center p-6 backdrop-blur-xl">
+        <button onclick="closeMedia()" class="absolute top-10 right-6 text-white opacity-50 hover:opacity-100"><i data-lucide="x-circle" size="40"></i></button>
+        <div id="media-content" class="w-full max-w-sm aspect-square flex items-center justify-center overflow-hidden rounded-3xl border border-white/10 shadow-2xl bg-black">
             </div>
+        <p id="media-title" class="mt-6 font-black uppercase tracking-widest text-pink-500 italic"></p>
     </div>
 
-    <header class="flex flex-col items-center mb-4">
-        <h1 class="text-2xl font-black italic text-gradient uppercase tracking-tighter text-center">Musclor Mommy</h1>
+    <header class="flex flex-col items-center mb-6">
+        <h1 class="text-2xl font-black italic text-gradient uppercase tracking-tighter">Musclor Mommy</h1>
         <input type="date" id="input-date" class="mt-2 bg-transparent border-none text-[11px] font-bold text-gray-500 uppercase outline-none">
     </header>
 
     <div class="flex justify-center gap-8 mb-6">
-        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center"><div class="p-3.5 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20"><i data-lucide="waves" size="20"></i></div><span class="text-[8px] font-black uppercase mt-1">Pool</span></button>
-        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center"><div class="p-3.5 rounded-2xl bg-pink-500/10 text-pink-400 border border-pink-500/20"><i data-lucide="dumbbell" size="20"></i></div><span class="text-[8px] font-black uppercase mt-1">Upper</span></button>
-        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center"><div class="p-3.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"><i data-lucide="zap" size="20"></i></div><span class="text-[8px] font-black uppercase mt-1">Legs</span></button>
+        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20"><i data-lucide="waves" size="22"></i></div><span class="text-[8px] font-black uppercase mt-1">Pool</span></button>
+        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-2xl bg-pink-500/10 text-pink-400 border border-pink-500/20"><i data-lucide="dumbbell" size="22"></i></div><span class="text-[8px] font-black uppercase mt-1">Upper</span></button>
+        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center"><div class="p-4 rounded-2xl bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"><i data-lucide="zap" size="22"></i></div><span class="text-[8px] font-black uppercase mt-1">Legs</span></button>
     </div>
 
     <div class="view-container">
-        <div id="view-log" class="hidden animate-in fade-in duration-300">
+        <div id="view-log" class="hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="glass p-6 space-y-6">
                 <div class="text-center space-y-1">
-                    <label id="label-name" class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Exercise Name</label>
+                    <label id="label-name" class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Target Name</label>
                     <input type="text" id="exercise-name" list="suggestions" placeholder="..." class="w-full py-4 text-xl font-bold uppercase outline-none">
                     <datalist id="suggestions"></datalist>
                 </div>
 
                 <div id="pool-fields" class="hidden text-center">
                     <label class="text-[10px] font-black text-blue-500 uppercase block mb-1">Laps (25m)</label>
-                    <input type="number" id="swim-laps" oninput="calcDist()" placeholder="0" class="w-full py-5 text-5xl font-black text-blue-400">
-                    <p class="mt-2 text-xs font-bold text-gray-400 italic">Distance: <span id="swim-total" class="text-blue-400">0</span>m</p>
+                    <input type="number" id="swim-laps" oninput="calcDist()" class="w-full py-5 text-5xl font-black text-blue-400 bg-blue-500/5">
+                    <p class="mt-2 text-xs font-bold text-gray-500">Total: <span id="swim-total" class="text-blue-400">0</span>m</p>
                 </div>
 
                 <div id="muscle-fields" class="space-y-4">
                     <div class="flex gap-3">
                         <div class="flex-1 relative">
                             <label class="text-[10px] font-black text-red-500 uppercase block mb-1">Weight</label>
-                            <input type="number" id="weight" placeholder="0" class="w-full py-4 text-3xl font-black">
-                            <button onclick="toggleUnit()" id="unit-btn" class="absolute right-2 bottom-4 text-[8px] font-black text-gray-500 bg-white/5 px-2 py-1 rounded">KG</button>
+                            <input type="number" id="weight" class="w-full py-4 text-3xl font-black">
+                            <button onclick="toggleUnit()" id="unit-btn" class="absolute right-2 bottom-4 text-[8px] font-black text-gray-500">KG</button>
                         </div>
                         <div class="w-1/3">
                             <label class="text-[10px] font-black text-pink-500 uppercase block mb-1 text-center">Reps</label>
-                            <input type="number" id="reps" placeholder="0" class="w-full py-4 text-3xl font-black italic">
+                            <input type="number" id="reps" class="w-full py-4 text-3xl font-black italic">
                         </div>
                     </div>
                 </div>
-                <button onclick="addEntry()" id="btn-submit-log" class="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-white shadow-xl active:scale-95 transition-all">LOG WORKOUT</button>
+                <button onclick="addEntry()" id="btn-submit-log" class="w-full py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-white shadow-xl active:scale-95 transition-all">LOG SUCCESS</button>
             </div>
         </div>
 
@@ -83,21 +89,15 @@
         <div id="view-stats" class="hidden space-y-6"></div>
     </div>
 
-    <div class="fixed bottom-10 left-0 right-0 flex justify-center items-end gap-10 px-10">
-        <button onclick="changeTab('log')" id="nav-log" class="nav-btn bg-white/5 border border-white/10 text-gray-500 active">
-            <i data-lucide="plus" size="24"></i>
-        </button>
-        <button onclick="changeTab('history')" id="nav-history" class="nav-btn bg-white/5 border border-white/10 text-gray-500">
-            <i data-lucide="list" size="24"></i>
-        </button>
-        <button onclick="changeTab('stats')" id="nav-stats" class="nav-btn bg-white/5 border border-white/10 text-gray-500">
-            <i data-lucide="activity" size="24"></i>
-        </button>
+    <div class="fixed bottom-10 left-0 right-0 flex justify-center items-center gap-10">
+        <button onclick="changeTab('log')" id="nav-log" class="nav-btn active"><i data-lucide="plus" size="28"></i></button>
+        <button onclick="changeTab('history')" id="nav-history" class="nav-btn"><i data-lucide="list" size="28"></i></button>
+        <button onclick="changeTab('stats')" id="nav-stats" class="nav-btn"><i data-lucide="activity" size="28"></i></button>
     </div>
 
     <script>
         let currentType = null; 
-        let entries = JSON.parse(localStorage.getItem('mm_v14_data')) || [];
+        let entries = JSON.parse(localStorage.getItem('mm_v15_data')) || [];
         let mediaMap = JSON.parse(localStorage.getItem('mm_media_map_v2')) || {}; 
         let currentTab = 'log';
         let isLb = false;
@@ -113,9 +113,8 @@
                 document.getElementById('view-log').classList.remove('hidden');
                 document.getElementById('pool-fields').classList.toggle('hidden', currentType !== 'swim');
                 document.getElementById('muscle-fields').classList.toggle('hidden', currentType === 'swim');
-                document.getElementById('label-name').innerText = currentType === 'swim' ? "Stroke Type" : "Machine Used";
-                const btn = document.getElementById('btn-submit-log');
-                btn.style.backgroundColor = currentType === 'swim' ? '#3b82f6' : (currentType === 'upper' ? '#ec4899' : '#eab308');
+                document.getElementById('label-name').innerText = currentType === 'swim' ? "Stroke Type" : "Machine Name";
+                document.getElementById('btn-submit-log').style.backgroundColor = currentType === 'swim' ? '#3b82f6' : (currentType === 'upper' ? '#ec4899' : '#eab308');
             } else { document.getElementById('view-log').classList.add('hidden'); }
             refreshCurrentView();
             updateSuggestions();
@@ -126,7 +125,6 @@
             ['log', 'history', 'stats'].forEach(t => document.getElementById('view-'+t).classList.add('hidden'));
             if (tab === 'log' && currentType) document.getElementById('view-log').classList.remove('hidden');
             else if (tab !== 'log') document.getElementById('view-'+tab).classList.remove('hidden');
-            
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('nav-'+tab).classList.add('active');
             refreshCurrentView();
@@ -144,65 +142,71 @@
             let existing = entries.find(e => e.date === date && e.name === name && e.type === currentType);
             if(existing) {
                 if(currentType === 'swim') { existing.v1 = (parseInt(existing.v1) || 0) + laps; existing.v2 = existing.v1 * 25; } 
-                else { existing.allWeights = [...(existing.allWeights || [existing.v1]), weight]; existing.allReps = [...(existing.allReps || [existing.v2]), reps];
-                if(reps >= 8 && weight > (existing.bestWeight || 0)) existing.bestWeight = weight; }
+                else { 
+                    existing.allWeights = [...(existing.allWeights || [existing.v1]), weight]; 
+                    existing.allReps = [...(existing.allReps || [existing.v2]), reps];
+                    if(reps >= 8 && weight > (existing.bestWeight || 0)) existing.bestWeight = weight;
+                }
             } else {
                 entries.push({ id: Date.now(), date, type: currentType, name, v1: currentType === 'swim' ? laps : weight, v2: currentType === 'swim' ? laps * 25 : reps, allWeights: [weight], allReps: [reps], bestWeight: (currentType !== 'swim' && reps >= 8) ? weight : 0 });
             }
-            localStorage.setItem('mm_v14_data', JSON.stringify(entries));
+            localStorage.setItem('mm_v15_data', JSON.stringify(entries));
             document.getElementById('reps').value = ""; document.getElementById('weight').value = "";
-            alert("Entry Saved! 💪"); refreshCurrentView();
+            alert("Success! 🍑"); refreshCurrentView();
         }
 
         function renderHistory() {
             const container = document.getElementById('view-history');
             const filtered = currentType ? entries.filter(e => e.type === currentType) : entries;
             container.innerHTML = filtered.slice().reverse().map(e => `
-                <div class="glass p-4 flex justify-between items-center border-l-4 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-pink-500':'border-yellow-500'}">
+                <div class="glass p-5 flex justify-between items-center border-l-4 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-pink-500':'border-yellow-500'}">
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <p class="text-[8px] text-gray-500 font-black uppercase">${e.date}</p>
-                            ${getMediaIcon(e.name)}
+                        <div class="flex items-center gap-3 mb-1">
+                            <p class="text-[8px] text-gray-500 font-bold uppercase">${e.date}</p>
+                            ${getMediaIcon(e.name, e.type)}
                         </div>
                         <p class="font-bold uppercase text-xs tracking-tighter ${e.type==='swim'?'text-blue-400':e.type==='upper'?'text-pink-400':'text-yellow-400'}">${e.name}</p>
                     </div>
-                    <div class="text-right flex items-center gap-3">
+                    <div class="text-right flex items-center gap-4">
                         <div class="space-y-1">
-                            <div class="flex justify-end gap-1 flex-wrap max-w-[100px]">
-                                ${e.type === 'swim' ? `<span class="badge-common bg-blue-500/10 text-blue-400">${e.v1} L</span>` : e.allWeights.map(w => `<span class="badge-common bg-white/5 border border-white/10 text-white">${w}k</span>`).join('')}
+                            <div class="flex justify-end gap-1 flex-wrap max-w-[120px]">
+                                ${e.type === 'swim' ? `<span class="px-2 py-1 bg-blue-500/10 text-blue-400 rounded-md text-[10px] font-bold">${e.v1} L</span>` : (e.allWeights || [e.v1]).map(w => `<span class="px-2 py-1 bg-white/5 border border-white/10 rounded-md text-[10px] font-bold">${w}k</span>`).join('')}
                             </div>
-                            <div class="flex justify-end gap-1 flex-wrap max-w-[100px]">
-                                ${e.type === 'swim' ? `<span class="badge-common bg-white/5 text-gray-400">${e.v2}m</span>` : e.allReps.map(r => `<span class="badge-common bg-pink-500/10 text-pink-500">${r}</span>`).join('')}
+                            <div class="flex justify-end gap-1 flex-wrap max-w-[120px]">
+                                ${e.type === 'swim' ? `<span class="px-2 py-1 bg-white/5 text-gray-500 rounded-md text-[10px] font-bold">${e.v2}m</span>` : (e.allReps || [e.v2]).map(r => `<span class="px-2 py-1 bg-pink-500/10 text-pink-500 rounded-md text-[10px] font-bold">${r}</span>`).join('')}
                             </div>
                         </div>
-                        <button onclick="deleteEntry(${e.id})" class="text-gray-800"><i data-lucide="trash-2" size="14"></i></button>
+                        <button onclick="deleteEntry(${e.id})" class="text-gray-800"><i data-lucide="trash-2" size="16"></i></button>
                     </div>
                 </div>
             `).join('');
             lucide.createIcons();
         }
 
-        function getMediaIcon(name) {
+        function getMediaIcon(name, type) {
             const url = mediaMap[name];
-            const color = currentType === 'swim' ? 'bg-blue-500' : (currentType === 'legs' ? 'bg-yellow-500' : 'bg-pink-500');
+            const color = type === 'swim' ? 'bg-blue-500' : (type === 'legs' ? 'bg-yellow-500' : 'bg-pink-500');
             return url 
-                ? `<button onclick="openMedia('${name}')" class="w-4 h-4 rounded-full ${color} flex items-center justify-center text-[10px] font-bold">?</button>`
-                : `<button onclick="promptMedia('${name}')" class="w-4 h-4 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-gray-500">+</button>`;
+                ? `<button onclick="openMedia('${name}')" class="w-5 h-5 rounded-full ${color} flex items-center justify-center text-[10px] font-black">?</button>`
+                : `<button onclick="promptMedia('${name}')" class="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-gray-500">+</button>`;
         }
 
         function promptMedia(name) {
-            const url = prompt(`Paste direct GIF or MP4 link for ${name}:`);
+            const url = prompt(`File path (ex: media/legday.gif) or direct link for ${name}:`);
             if(url) { mediaMap[name] = url; localStorage.setItem('mm_media_map_v2', JSON.stringify(mediaMap)); refreshCurrentView(); }
         }
 
         function openMedia(name) {
             const url = mediaMap[name];
             const content = document.getElementById('media-content');
-            // Advanced check for video extensions
-            const isVideo = url.toLowerCase().match(/\.(mp4|mov|webm)$/);
+            document.getElementById('media-title').innerText = name;
+            const ext = url.split('.').pop().toLowerCase();
+            const isVideo = ['mp4', 'mov', 'webm'].includes(ext);
+            
             content.innerHTML = isVideo 
                 ? `<video src="${url}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` 
-                : `<img src="${url}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/300?text=Invalid+Link'">`;
+                : `<img src="${url}" class="w-full h-full object-contain" onerror="alert('Error loading media. Check the path!')">`;
+            
             document.getElementById('media-modal').classList.remove('hidden');
         }
 
@@ -211,20 +215,20 @@
         function renderProgression() {
             const container = document.getElementById('view-stats'); container.innerHTML = "";
             const filtered = currentType ? entries.filter(e => e.type === currentType) : entries;
-            const machines = [...new Set(filtered.map(e => e.name))];
-            machines.forEach(m => {
+            const names = [...new Set(filtered.map(e => e.name))];
+            names.forEach(m => {
                 const data = filtered.filter(e => e.name === m).sort((a,b) => new Date(a.date) - new Date(b.date));
                 const color = data[0].type === 'swim' ? '#3b82f6' : data[0].type === 'upper' ? '#ec4899' : '#eab308';
                 const card = document.createElement('div');
-                card.className = "glass p-4";
-                card.innerHTML = `<div class="flex justify-between items-center mb-4"><div class="flex items-center gap-2">${getMediaIcon(m)}<p class="text-[9px] font-black uppercase tracking-widest" style="color:${color}">${m}</p></div><p class="text-[7px] text-gray-500 font-bold tracking-widest uppercase">${data[0].type==='swim'?'Dist(m)':'PR(kg)'}</p></div><canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>`;
+                card.className = "glass p-5";
+                card.innerHTML = `<div class="flex justify-between items-center mb-4"><div class="flex items-center gap-3">${getMediaIcon(m, data[0].type)}<p class="text-[10px] font-black uppercase tracking-widest" style="color:${color}">${m}</p></div><p class="text-[8px] text-gray-600 font-bold uppercase">${data[0].type==='swim'?'Dist':'PR'}</p></div><canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>`;
                 container.appendChild(card);
-                new Chart(document.getElementById(`chart-${m.replace(/\s+/g, '-')}`), { type: 'line', data: { labels: data.map(d => d.date), datasets: [{ data: data.map(d => d.type === 'swim' ? d.v2 : d.bestWeight), borderColor: color, fill: true, tension: 0.4, pointRadius: 4, backgroundColor: color + '1A' }] }, options: { plugins: { legend: { display: false } }, scales: { y: { display: true, ticks: { color: color, font: { size: 8 } } }, x: { display: false } } } });
+                new Chart(document.getElementById(`chart-${m.replace(/\s+/g, '-')}`), { type: 'line', data: { labels: data.map(d => d.date), datasets: [{ data: data.map(d => d.type === 'swim' ? d.v2 : (d.bestWeight || d.v1)), borderColor: color, fill: true, tension: 0.4, pointRadius: 5, backgroundColor: color + '10', pointBackgroundColor: color }] }, options: { plugins: { legend: { display: false } }, scales: { y: { display: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#444', font: { size: 9 } } }, x: { display: false } } } });
             });
             lucide.createIcons();
         }
 
-        function deleteEntry(id) { if(confirm("Delete entry?")) { entries = entries.filter(e => e.id !== id); localStorage.setItem('mm_v14_data', JSON.stringify(entries)); refreshCurrentView(); } }
+        function deleteEntry(id) { if(confirm("Delete?")) { entries = entries.filter(e => e.id !== id); localStorage.setItem('mm_v15_data', JSON.stringify(entries)); refreshCurrentView(); } }
         function updateSuggestions() { const list = document.getElementById('suggestions'); const unique = [...new Set(entries.filter(e => !currentType || e.type === currentType).map(e => e.name))]; list.innerHTML = unique.map(name => `<option value="${name}">`).join(''); }
         function calcDist() { document.getElementById('swim-total').innerText = (document.getElementById('swim-laps').value || 0) * 25; }
         function refreshCurrentView() { if(currentTab === 'history') renderHistory(); if(currentTab === 'stats') renderProgression(); }
