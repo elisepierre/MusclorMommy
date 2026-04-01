@@ -10,119 +10,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; height: 100vh; overflow: hidden; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; }
         .text-gradient { background: linear-gradient(135deg, #ff0080 0%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .accent-pink { background: linear-gradient(135deg, #ff0080 0%, #ff8c00 100%); }
-        
-        input[type="date"] { background: #111; color: white; border: 1px solid #333; padding: 10px; border-radius: 12px; font-size: 11px; outline: none; width: 150px; }
-        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; text-align: center; outline: none; color: white; transition: 0.2s; }
-        input:focus { border-color: #ff0080; background: rgba(255,255,255,0.1); }
-        
-        .tab-btn { opacity: 0.25; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .tab-btn.active { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(255, 126, 179, 0.5)); }
-        
-        .view-container { height: calc(100vh - 230px); overflow-y: auto; scrollbar-width: none; padding-bottom: 120px; }
+        input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; outline: none; text-align: center; }
+        input:focus { border-color: #ff0080; }
+        .tab-btn { opacity: 0.3; transition: 0.2s; }
+        .tab-btn.active { opacity: 1; transform: scale(1.05); }
+        .view-container { height: calc(100vh - 160px); overflow-y: auto; scrollbar-width: none; padding-bottom: 60px; }
         .view-container::-webkit-scrollbar { display: none; }
-        
-        .nav-icon { color: #666; transition: 0.3s; }
-        .nav-active { color: #ff0080; transform: translateY(-4px); }
     </style>
 </head>
-<body class="p-4">
+<body class="p-3">
 
-    <header class="text-center py-2">
-        <h1 class="text-3xl font-black tracking-tighter text-gradient uppercase italic leading-none">Musclor Mommy</h1>
-        <div class="mt-4 flex justify-center"><input type="date" id="input-date"></div>
+    <header class="flex justify-between items-center mb-3 px-1">
+        <h1 class="text-xl font-black italic text-gradient uppercase tracking-tighter">Musclor Mommy</h1>
+        <input type="date" id="input-date" class="bg-transparent border-none text-[10px] font-bold text-gray-500 uppercase w-24">
     </header>
 
-    <div class="flex justify-center gap-10 my-6">
-        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center gap-1">
-            <div class="p-3.5 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20"><i data-lucide="waves" size="22"></i></div>
-            <span class="text-[9px] font-black uppercase tracking-widest mt-1">Pool</span>
-        </button>
-        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center gap-1">
-            <div class="p-3.5 rounded-2xl bg-red-500/10 text-red-400 border border-red-500/20"><i data-lucide="dumbbell" size="22"></i></div>
-            <span class="text-[9px] font-black uppercase tracking-widest mt-1">Upper</span>
-        </button>
-        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center gap-1">
-            <div class="p-3.5 rounded-2xl bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"><i data-lucide="zap" size="22"></i></div>
-            <span class="text-[9px] font-black uppercase tracking-widest mt-1">Legs</span>
-        </button>
+    <div class="flex justify-center gap-6 mb-4">
+        <button onclick="setGlobalFilter('swim')" id="btn-swim" class="tab-btn flex flex-col items-center"><div class="p-2.5 rounded-full bg-blue-500/10 text-blue-400"><i data-lucide="waves" size="18"></i></div><span class="text-[7px] font-black uppercase mt-1">Pool</span></button>
+        <button onclick="setGlobalFilter('upper')" id="btn-upper" class="tab-btn flex flex-col items-center"><div class="p-2.5 rounded-full bg-red-500/10 text-red-400"><i data-lucide="dumbbell" size="18"></i></div><span class="text-[7px] font-black uppercase mt-1 text-red-400">Upper</span></button>
+        <button onclick="setGlobalFilter('legs')" id="btn-legs" class="tab-btn flex flex-col items-center"><div class="p-2.5 rounded-full bg-yellow-500/10 text-yellow-400"><i data-lucide="zap" size="18"></i></div><span class="text-[7px] font-black uppercase mt-1 text-yellow-400">Legs</span></button>
     </div>
 
     <div class="view-container">
-        <div id="view-log" class="space-y-4">
-            <div class="glass-card p-6 space-y-5">
-                <div class="text-center space-y-1">
-                    <label id="label-name" class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Target Exercise</label>
-                    <input type="text" id="exercise-name" list="suggestions" placeholder="..." class="w-full py-4 text-xl font-bold uppercase outline-none">
-                    <datalist id="suggestions"></datalist>
-                </div>
+        <div id="view-log" class="space-y-3">
+            <div class="glass p-4 space-y-3">
+                <input type="text" id="exercise-name" list="suggestions" placeholder="MACHINE / NAGE" class="w-full py-2.5 text-sm font-bold uppercase">
+                <datalist id="suggestions"></datalist>
 
                 <div id="pool-fields" class="hidden text-center">
-                    <label class="text-[10px] font-black text-blue-500 uppercase block mb-1">Longueurs (25m)</label>
-                    <input type="number" id="swim-laps" oninput="calcDist()" class="w-full py-5 text-5xl font-black text-blue-400">
-                    <p class="mt-2 text-xs font-bold text-gray-400 italic">Distance : <span id="swim-total" class="text-white">0</span> m</p>
+                    <input type="number" id="swim-laps" placeholder="LONGUEURS" class="w-full py-3 text-3xl font-black text-blue-400">
                 </div>
 
-                <div id="muscle-fields" class="space-y-5">
-                    <div class="flex justify-between items-end mb-1">
-                        <label class="text-[10px] font-black text-red-500 uppercase">Charge</label>
-                        <button onclick="toggleUnit()" id="unit-toggle" class="text-[9px] font-black bg-white/10 px-3 py-1 rounded-full border border-white/10 italic">MODE: KG</button>
-                    </div>
-                    <input type="number" id="weight" placeholder="0" class="w-full py-6 text-6xl font-black leading-none">
-                    
-                    <div class="text-center">
-                        <label class="text-[10px] font-black text-gray-500 uppercase block mb-2">Série Performance (Reps)</label>
-                        <input type="number" id="reps" oninput="checkPerformance()" placeholder="0" class="w-full py-4 text-3xl font-black italic">
-                        <p id="performance-hint" class="mt-3 text-[10px] font-black uppercase tracking-tighter min-h-[1em]"></p>
+                <div id="muscle-fields" class="space-y-3">
+                    <div class="flex gap-2">
+                        <div class="flex-1 relative">
+                            <input type="number" id="weight" placeholder="POIDS" class="w-full py-3 text-2xl font-black">
+                            <button onclick="toggleUnit()" id="unit-btn" class="absolute right-2 top-1 text-[7px] font-black text-gray-500">KG</button>
+                        </div>
+                        <input type="number" id="reps" placeholder="REPS" class="w-1/3 py-3 text-2xl font-black italic text-pink-500">
                     </div>
                 </div>
-                <button onclick="addEntry()" class="w-full py-5 accent-pink rounded-2xl font-black text-sm uppercase italic active:scale-95 transition-all shadow-xl shadow-pink-500/30 tracking-widest">ADD SUCCESS</button>
+                <button onclick="addEntry()" class="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-pink-500/20 active:scale-95 transition">ENREGISTRER</button>
             </div>
         </div>
 
-        <div id="view-history" class="hidden space-y-3"></div>
-
-        <div id="view-stats" class="hidden space-y-8"></div>
+        <div id="view-history" class="hidden space-y-2"></div>
+        <div id="view-stats" class="hidden space-y-4"></div>
     </div>
 
-    <nav class="fixed bottom-6 left-6 right-6 h-20 glass-card flex justify-around items-center border border-white/10 shadow-2xl px-4">
-        <button onclick="changeTab('log')" class="flex flex-col items-center"><i data-lucide="plus" id="nav-log" class="nav-icon"></i></button>
-        <button onclick="changeTab('history')" class="flex flex-col items-center"><i data-lucide="layout-list" id="nav-history" class="nav-icon"></i></button>
-        <button onclick="changeTab('stats')" class="flex flex-col items-center"><i data-lucide="trending-up" id="nav-stats" class="nav-icon"></i></button>
+    <nav class="fixed bottom-4 left-4 right-4 h-14 glass flex justify-around items-center border border-white/5 shadow-2xl">
+        <button onclick="changeTab('log')"><i data-lucide="plus" id="nav-log" class="text-gray-500"></i></button>
+        <button onclick="changeTab('history')"><i data-lucide="list" id="nav-history" class="text-gray-500"></i></button>
+        <button onclick="changeTab('stats')"><i data-lucide="activity" id="nav-stats" class="text-gray-500"></i></button>
     </nav>
 
     <script>
         let currentType = 'upper'; 
-        let entries = JSON.parse(localStorage.getItem('mm_v9_data')) || [];
+        let entries = JSON.parse(localStorage.getItem('mm_v10_data')) || [];
         let currentTab = 'log';
-        let currentUnit = 'KG';
+        let isLb = false;
         document.getElementById('input-date').valueAsDate = new Date();
 
-        function toggleUnit() {
-            currentUnit = currentUnit === 'KG' ? 'LB' : 'KG';
-            document.getElementById('unit-toggle').innerText = `MODE: ${currentUnit}`;
-        }
-
-        function checkPerformance() {
-            const r = parseInt(document.getElementById('reps').value);
-            const hint = document.getElementById('performance-hint');
-            if (!r) { hint.innerText = ""; return; }
-            if (r < 8) { hint.innerText = "⚠️ TROP LOURD - DESCENDS"; hint.style.color = "#facc15"; }
-            else if (r >= 8 && r < 12) { hint.innerText = "🔥 PARFAIT - RESTE ICI"; hint.style.color = "#4ade80"; }
-            else { hint.innerText = "🚀 TROP LÉGER - AUGMENTE"; hint.style.color = "#f472b6"; }
-        }
+        function toggleUnit() { isLb = !isLb; document.getElementById('unit-btn').innerText = isLb ? 'LB' : 'KG'; }
 
         function setGlobalFilter(type) {
             currentType = (currentType === type) ? null : type;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             if(currentType) document.getElementById('btn-'+currentType).classList.add('active');
-
-            const isSwim = currentType === 'swim';
             document.getElementById('pool-fields').classList.toggle('hidden', currentType !== 'swim');
             document.getElementById('muscle-fields').classList.toggle('hidden', currentType === 'swim');
-            document.getElementById('label-name').innerText = isSwim ? "Type de nage" : "Machine utilisée";
             refreshCurrentView();
             updateSuggestions();
         }
@@ -131,36 +89,45 @@
             currentTab = tab;
             ['log', 'history', 'stats'].forEach(t => document.getElementById('view-'+t).classList.add('hidden'));
             document.getElementById('view-'+tab).classList.remove('hidden');
-            
-            document.querySelectorAll('.nav-icon').forEach(i => i.classList.remove('nav-active'));
-            document.getElementById('nav-'+tab).classList.add('nav-active');
+            document.querySelectorAll('nav i').forEach(i => i.classList.remove('text-pink-500'));
+            document.getElementById('nav-'+tab).classList.add('text-pink-500');
             refreshCurrentView();
         }
 
         function addEntry() {
             const name = document.getElementById('exercise-name').value.trim().toUpperCase();
-            if(!name) return;
+            if(!name || !currentType) return;
             
             let weight = parseFloat(document.getElementById('weight').value) || 0;
-            if(currentUnit === 'LB') weight = parseFloat((weight * 0.453592).toFixed(1));
-
+            if(isLb) weight = parseFloat((weight * 0.453).toFixed(1));
             const reps = parseInt(document.getElementById('reps').value) || 0;
             const laps = parseInt(document.getElementById('swim-laps').value) || 0;
+            const date = document.getElementById('input-date').value;
 
-            const entry = {
-                id: Date.now(),
-                date: document.getElementById('input-date').value,
-                type: currentType,
-                name: name,
-                v1: currentType === 'swim' ? laps : weight,
-                v2: currentType === 'swim' ? (laps * 25) : reps,
-                unit: currentType === 'swim' ? 'L' : 'KG'
-            };
-            entries.push(entry);
-            localStorage.setItem('mm_v9_data', JSON.stringify(entries));
-            alert("Check ! 💪");
-            document.getElementById('reps').value = "";
-            document.getElementById('performance-hint').innerText = "";
+            // FUSION : Chercher si la machine existe déjà ce jour là
+            let existing = entries.find(e => e.date === date && e.name === name && e.type === currentType);
+            
+            if(existing) {
+                if(currentType === 'swim') {
+                    existing.v1 = parseInt(existing.v1) + laps;
+                    existing.v2 = existing.v1 * 25;
+                } else {
+                    existing.v1 = existing.v1 + " | " + weight;
+                    existing.v2 = existing.v2 + " | " + reps;
+                    // On stocke le max valide (reps >= 8) pour le chart
+                    if(reps >= 8 && weight > (existing.bestWeight || 0)) existing.bestWeight = weight;
+                }
+            } else {
+                entries.push({
+                    id: Date.now(), date, type: currentType, name, 
+                    v1: currentType === 'swim' ? laps : weight,
+                    v2: currentType === 'swim' ? laps * 25 : reps,
+                    bestWeight: (currentType !== 'swim' && reps >= 8) ? weight : 0
+                });
+            }
+            localStorage.setItem('mm_v10_data', JSON.stringify(entries));
+            alert("Check! 💪");
+            document.getElementById('reps').value = ""; document.getElementById('weight').value = "";
             updateSuggestions();
         }
 
@@ -168,18 +135,13 @@
             const container = document.getElementById('view-history');
             const filtered = currentType ? entries.filter(e => e.type === currentType) : entries;
             container.innerHTML = filtered.slice().reverse().map(e => `
-                <div class="glass-card p-5 flex justify-between items-center border-l-4 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-red-500':'border-yellow-500'}">
-                    <div>
-                        <p class="text-[9px] font-bold text-gray-500">${e.date}</p>
-                        <p class="font-bold uppercase italic text-sm tracking-tighter">${e.name}</p>
+                <div class="glass p-3 flex justify-between items-center border-l-2 ${e.type==='swim'?'border-blue-500':e.type==='upper'?'border-red-500':'border-yellow-500'}">
+                    <div class="flex-1"><p class="text-[7px] text-gray-500 font-bold">${e.date}</p><p class="font-bold uppercase text-[10px] tracking-tight">${e.name}</p></div>
+                    <div class="text-right min-w-[80px]">
+                        <p class="font-black text-xs">${e.v1}<span class="text-[7px] ml-1 text-gray-500">${e.type==='swim'?'L':'KG'}</span></p>
+                        <p class="text-[8px] text-pink-500 font-bold">${e.v2}${e.type==='swim'?'m':''}</p>
                     </div>
-                    <div class="flex items-center gap-5 text-right">
-                        <div>
-                            <p class="font-black text-xl leading-none">${e.v1}<span class="text-[9px] ml-1 text-gray-500">${e.unit}</span></p>
-                            <p class="text-[10px] text-pink-500 font-black mt-2 tracking-tighter uppercase">${e.v2}${e.type==='swim'?'m':' REPS'}</p>
-                        </div>
-                        <button onclick="deleteEntry(${e.id})" class="text-gray-800"><i data-lucide="trash-2" size="16"></i></button>
-                    </div>
+                    <button onclick="deleteEntry(${e.id})" class="ml-2 text-gray-800"><i data-lucide="trash-2" size="12"></i></button>
                 </div>
             `).join('');
             lucide.createIcons();
@@ -189,59 +151,34 @@
             const container = document.getElementById('view-stats');
             container.innerHTML = "";
             const filtered = currentType ? entries.filter(e => e.type === currentType) : entries;
-            const machineNames = [...new Set(filtered.map(e => e.name))];
+            const machines = [...new Set(filtered.map(e => e.name))];
 
-            machineNames.forEach(m => {
-                const machineEntries = filtered.filter(e => e.name === m);
-                const groupedByDate = {};
-                
-                machineEntries.forEach(e => {
-                    const val = e.type === 'swim' ? e.v2 : e.v1; // Distance pour swim, poids pour muscu
-                    if(!groupedByDate[e.date] || val > groupedByDate[e.date]) groupedByDate[e.date] = val;
-                });
-
-                const sortedDates = Object.keys(groupedByDate).sort((a,b) => new Date(a) - new Date(b));
-                const isSwim = machineEntries[0].type === 'swim';
-
+            machines.forEach(m => {
+                const data = filtered.filter(e => e.name === m).sort((a,b) => new Date(a.date) - new Date(b.date));
                 const card = document.createElement('div');
-                card.className = "glass-card p-6 space-y-4";
-                card.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <p class="text-[11px] font-black text-pink-500 uppercase italic tracking-[0.2em]">${m}</p>
-                        <p class="text-[8px] text-gray-500 font-black uppercase tracking-widest">${isSwim ? 'DIST (M)' : 'MAX WEIGHT (KG)'}</p>
-                    </div>
-                    <canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>
-                `;
+                card.className = "glass p-3";
+                card.innerHTML = `<p class="text-[8px] font-black text-pink-500 uppercase mb-2">${m} (BEST @ 8+ REPS)</p><canvas id="chart-${m.replace(/\s+/g, '-')}"></canvas>`;
                 container.appendChild(card);
 
                 new Chart(document.getElementById(`chart-${m.replace(/\s+/g, '-')}`), {
                     type: 'line',
                     data: {
-                        labels: sortedDates,
+                        labels: data.map(d => d.date),
                         datasets: [{
-                            data: sortedDates.map(d => groupedByDate[d]),
-                            borderColor: isSwim ? '#3b82f6' : '#ff0080',
-                            backgroundColor: isSwim ? 'rgba(59, 130, 246, 0.05)' : 'rgba(255, 0, 128, 0.05)',
-                            fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#fff', borderWidth: 3
+                            data: data.map(d => d.type === 'swim' ? d.v2 : d.bestWeight),
+                            borderColor: data[0].type === 'swim' ? '#3b82f6' : '#ff0080',
+                            fill: false, tension: 0.3, pointRadius: 3
                         }]
                     },
-                    options: { 
-                        plugins: { legend: { display: false } }, 
-                        scales: { 
-                            y: { display: true, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#444', font: { size: 9, weight: 'bold' } } }, 
-                            x: { display: true, ticks: { color: '#333', font: { size: 8 } }, grid: { display: false } } 
-                        } 
-                    }
+                    options: { plugins: { legend: { display: false } }, scales: { y: { display: true, ticks: { font: { size: 7 } } }, x: { display: false } } }
                 });
             });
         }
 
         function deleteEntry(id) {
-            if(confirm("Supprimer ?")) {
-                entries = entries.filter(e => e.id !== id);
-                localStorage.setItem('mm_v9_data', JSON.stringify(entries));
-                refreshCurrentView();
-            }
+            entries = entries.filter(e => e.id !== id);
+            localStorage.setItem('mm_v10_data', JSON.stringify(entries));
+            refreshCurrentView();
         }
 
         function updateSuggestions() {
@@ -255,10 +192,7 @@
             if(currentTab === 'stats') renderProgression();
         }
 
-        function calcDist() { document.getElementById('swim-total').innerText = (document.getElementById('swim-laps').value || 0) * 25; }
-        
         lucide.createIcons();
-        changeTab('log');
         setGlobalFilter('upper');
     </script>
 </body>
